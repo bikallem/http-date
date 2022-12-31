@@ -1,3 +1,9 @@
 (library
  (public_name http-date)
  (name http_date))
+
+(ocamllex lexer)
+
+(menhir
+ (modules parser)
+ (flags --unused-tokens))
