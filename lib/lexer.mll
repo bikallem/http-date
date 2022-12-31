@@ -18,6 +18,7 @@ rule token = parse
 | digit_2    { DIGIT2 (int_of_string num) }
 | digit_4    { DIGIT4 (int_of_string num) }
 | ','        { COMMA }
+| ':'        { COLON }
 | gmt        { GMT }
 | ' '        { SP }
 | eof        { EOF }
