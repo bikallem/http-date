@@ -39,4 +39,6 @@ module Day : sig
   val to_string : t -> string
 end
 
-val parse : string -> Day_name.t
+type t
+
+val parse : string -> t
