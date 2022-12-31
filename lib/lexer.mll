@@ -11,9 +11,9 @@ let month = ("Jan" | "Feb" | "Mar" | "Apr" | "May" | "Jun" | "Jul" | "Aug" | "Se
 let gmt = "GMT"
 
 rule token = parse
-| day_name   { DAY_NAME (Day_name.of_string day_name) }
-| day_name_l { DAY_NAME_L (Day_name.of_string day_name_l) } 
-| month      { MONTH (Month.of_string month) }
+| day_name   { DAY_NAME (Date_time.day_name_of_string day_name) }
+| day_name_l { DAY_NAME_L (Date_time.day_name_of_string_long day_name_l) } 
+| month      { MONTH (Date_time.month_of_string month) }
 | digit_2    { DIGIT2 (int_of_string num) }
 | digit_4    { DIGIT4 (int_of_string num) }
 | ','        { COMMA }

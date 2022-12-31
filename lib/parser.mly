@@ -1,9 +1,9 @@
 %{
 %}
 
-%token <Day_name.t> DAY_NAME
-%token <Day_name.t> DAY_NAME_L
-%token <Month.t> MONTH
+%token <Date_time.day_name> DAY_NAME
+%token <Date_time.day_name> DAY_NAME_L
+%token <Date_time.month> MONTH
 %token <int>DIGIT2
 %token <int>DIGIT4
 %token COMMA
@@ -21,7 +21,7 @@ imf_fixdate: day_name=DAY_NAME COMMA SP date = date1 SP time = time_of_day SP GM
 
 date1 : day=DIGIT2 SP month=MONTH SP year=DIGIT4
   {
-    let day = Day.of_int day in
+    let day = Date_time.day_of_int day in
     (day, month, year)
   }
 
