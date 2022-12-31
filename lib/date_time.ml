@@ -124,7 +124,7 @@ let month_of_string s =
 
 let pp fmt = function
   | Imf_fixdate (day_name, day, month, year, hour, minutes, seconds) ->
-      Format.fprintf fmt "%s, %02d %s %04d %02d:%02d:%02d GMT"
+      Format.fprintf fmt "%s, %02d %s %04d %02d:%02d:%02d GMT%!"
         (day_name_to_string day_name)
         day (month_to_string month) year hour minutes seconds
   | _ -> assert false

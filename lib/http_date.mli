@@ -17,5 +17,6 @@ type month =
 type day = int
 type t
 
-val of_string : string -> t
+val decode : string -> t
+val encode : t -> string
 val pp : Format.formatter -> t -> unit
