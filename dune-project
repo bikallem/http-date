@@ -4,6 +4,8 @@
 
 (using menhir 2.0)
 
+(using mdx 0.2)
+
 (generate_opam_files true)
 
 (source
@@ -22,4 +24,8 @@
  (depends
   (ocaml
    (>= 5.0))
-  dune))
+  dune
+  (mdx
+   (and
+    (>= 2.1.0)
+    :with-test))))
