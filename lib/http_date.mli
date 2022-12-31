@@ -38,3 +38,5 @@ module Day : sig
   val to_int : t -> int
   val to_string : t -> string
 end
+
+val parse : string -> Day_name.t

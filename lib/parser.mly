@@ -1,9 +1,9 @@
 %{
 %}
 
-%token <Date.Day_name.t> DAY_NAME
-%token <Date.Day_name.t> DAY_NAME_L
-%token <Date.Month.t> MONTH
+%token <Day_name.t> DAY_NAME
+%token <Day_name.t> DAY_NAME_L
+%token <Month.t> MONTH
 %token <int>DIGIT2
 %token <int>DIGIT4
 %token COMMA
@@ -12,7 +12,7 @@
 %token SP
 %token EOF
 
-%start <Date.Day_name.t> imf_fixdate
+%start <Day_name.t> imf_fixdate
 
 %%
 
