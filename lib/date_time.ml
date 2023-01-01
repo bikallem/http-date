@@ -119,7 +119,7 @@ let month_of_string s =
   | "Dec" -> `Dec
   | _ -> raise @@ Invalid_argument s
 
-type encode_fmt = [ `IMF_fixdate | `RFC850_datek | `ASCTIME_date ]
+type encode_fmt = [ `IMF_fixdate | `RFC850_date | `ASCTIME_date ]
 
 let pp ?(encode_fmt = `IMF_fixdate) fmt
     (day_name, day, month, year, hour, minutes, seconds) =
@@ -127,5 +127,9 @@ let pp ?(encode_fmt = `IMF_fixdate) fmt
   | `IMF_fixdate ->
       Format.fprintf fmt "%s, %02d %s %04d %02d:%02d:%02d GMT%!"
         (day_name_to_string day_name)
+        day (month_to_string month) year hour minutes seconds
+  | `RFC850_date ->
+      Format.fprintf fmt "%s, %02d-%s-%02d %02d:%02d:%02d GMT%!"
+        (day_name_to_string_l day_name)
         day (month_to_string month) year hour minutes seconds
   | _ -> assert false

@@ -20,7 +20,7 @@ type month =
   | `Dec ]
 
 type t
-type encode_fmt = [ `IMF_fixdate | `RFC850_datek | `ASCTIME_date ]
+type encode_fmt = [ `IMF_fixdate | `RFC850_date | `ASCTIME_date ]
 
 val create : day_name -> (day * month * year) -> (hour * minute * second) -> t
 val decode : string -> t
