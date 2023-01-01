@@ -2,7 +2,7 @@
   open Parser
 }
 
-let digit = ['0'-'9']
+let digit = ['0'-'9'] as num
 let digit_2 = (digit digit) as num
 let digit_4 = (digit digit digit digit) as num
 let day_name = ("Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun") as day_name
@@ -16,6 +16,7 @@ rule token = parse
 | month      { MONTH (Date_time.month_of_string month) }
 | digit_2    { DIGIT2 (int_of_string num) }
 | digit_4    { DIGIT4 (int_of_string num) }
+| digit      { DIGIT (Printf.sprintf "%c" num |> int_of_string) }
 | ','        { COMMA }
 | ':'        { COLON }
 | '-'        { DASH }

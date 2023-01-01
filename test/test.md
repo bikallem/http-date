@@ -67,3 +67,33 @@ Pretty-print RFC850 date.
 Sunday, 06-Nov-94 08:49:37 GMT
 - : unit = ()
 ```
+
+### ASCTIME date
+
+Decode ASCTIME specified date format.
+
+```ocaml
+# let asctime_date = "Sun Nov  6 08:49:37 1994" ;;
+val asctime_date : string = "Sun Nov  6 08:49:37 1994"
+
+# let d = Http_date.decode asctime_date ;;
+val d : Http_date.t = <abstr>
+```
+
+Encode ASCTIME date.
+
+```ocaml
+# let s = Http_date.encode ~encode_fmt:`ASCTIME_date d ;;
+val s : string = "Sun Nov  6 08:49:37 1994"
+
+# String.equal asctime_date s ;;
+- : bool = true
+```
+
+Pretty-print ASCTIME date.
+
+```ocaml
+# Http_date.pp ~encode_fmt:`ASCTIME_date std d ;;
+Sun Nov  6 08:49:37 1994
+- : unit = ()
+```
