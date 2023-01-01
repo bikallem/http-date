@@ -132,4 +132,7 @@ let pp ?(encode_fmt = `IMF_fixdate) fmt
       Format.fprintf fmt "%s, %02d-%s-%02d %02d:%02d:%02d GMT%!"
         (day_name_to_string_l day_name)
         day (month_to_string month) year hour minutes seconds
-  | _ -> assert false
+  | `ASCTIME_date ->
+      Format.fprintf fmt "%s %s %2d %02d:%02d:%02d %04d%!"
+        (day_name_to_string day_name)
+        (month_to_string month) day hour minutes seconds year
