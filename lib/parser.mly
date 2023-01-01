@@ -12,12 +12,15 @@
 %token SP
 %token EOF
 
-%start <Date_time.t> imf_fixdate
+%start <Date_time.t> http_date
 
 %%
 
-imf_fixdate: day_name=DAY_NAME COMMA SP date = date1 SP time = time_of_day SP GMT
-  { Date_time.imf_fixdate day_name date time }
+http_date :
+  | d=imf_fixdate { d }
+
+imf_fixdate : day_name=DAY_NAME COMMA SP date=date1 SP time=time_of_day SP GMT
+  { Date_time.create day_name date time }
 
 date1 : day=DIGIT2 SP month=MONTH SP year=DIGIT4
   {

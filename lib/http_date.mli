@@ -16,7 +16,8 @@ type month =
 
 type day = int
 type t
+type encode_fmt = [ `IMF_fixdate | `RFC850_datek | `ASCTIME_date ]
 
 val decode : string -> t
-val encode : t -> string
-val pp : Format.formatter -> t -> unit
+val encode : ?encode_fmt:encode_fmt -> t -> string
+val pp : ?encode_fmt:encode_fmt -> Format.formatter -> t -> unit

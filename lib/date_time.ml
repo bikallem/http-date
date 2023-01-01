@@ -19,13 +19,10 @@ type month =
   | `Nov
   | `Dec ]
 
-type t =
-  | Imf_fixdate of day_name * day * month * year * hour * minute * second
-  | Rfc850_date
-  | Asctime_date
+type t = day_name * day * month * year * hour * minute * second
 
-let imf_fixdate dayname (day, month, year) (h, m, s) =
-  Imf_fixdate (dayname, day, month, year, h, m, s)
+let create dayname (day, month, year) (h, m, s) =
+  (dayname, day, month, year, h, m, s)
 
 let parse_time (hh, mm, ss) =
   let hh =
@@ -122,8 +119,12 @@ let month_of_string s =
   | "Dec" -> `Dec
   | _ -> raise @@ Invalid_argument s
 
-let pp fmt = function
-  | Imf_fixdate (day_name, day, month, year, hour, minutes, seconds) ->
+type encode_fmt = [ `IMF_fixdate | `RFC850_datek | `ASCTIME_date ]
+
+let pp ?(encode_fmt = `IMF_fixdate) fmt
+    (day_name, day, month, year, hour, minutes, seconds) =
+  match encode_fmt with
+  | `IMF_fixdate ->
       Format.fprintf fmt "%s, %02d %s %04d %02d:%02d:%02d GMT%!"
         (day_name_to_string day_name)
         day (month_to_string month) year hour minutes seconds
