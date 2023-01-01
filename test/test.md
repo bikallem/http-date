@@ -1,5 +1,12 @@
 ## Http_date decode/encode tests
 
+## Setup
+
+```ocaml
+# let std = Format.std_formatter ;;
+val std : Format.formatter = <abstr>
+```
+
 ### IMF fixdate
 
 Decode IMF (Internet Message Format) fixdate.
@@ -26,7 +33,7 @@ val s : string = "Sun, 06 Nov 1994 08:49:37 GMT"
 Pretty-print IMF fixdate.
 
 ```ocaml
-# Http_date.pp Format.std_formatter d ;;
+# Http_date.pp std d ;;
 Sun, 06 Nov 1994 08:49:37 GMT
 - : unit = ()
 ```
