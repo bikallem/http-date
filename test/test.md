@@ -37,3 +37,35 @@ Pretty-print IMF fixdate.
 Sun, 06 Nov 1994 08:49:37 GMT
 - : unit = ()
 ```
+
+### RFC850 date
+
+Decode RFC-850 specified date format.
+
+```ocaml
+# let rfc850_date = "Sunday, 06-Nov-94 08:49:37 GMT" ;;
+val rfc850_date : string = "Sunday, 06-Nov-94 08:49:37 GMT"
+
+# let d = Http_date.decode rfc850_date ;;
+val d : Http_date.t = <abstr>
+```
+
+Encode RFC850 date.
+
+```ocaml
+# let s = Http_date.encode ~encode_fmt:`RFC850_date d ;;
+val s : string = "Sunday, 06-Nov-94 08:49:37 GMT"
+
+# String.equal rfc850_date s ;;
+- : bool = true
+```
+
+Pretty-print RFC850 date.
+
+```ocaml
+# Http_date.pp ~encode_fmt:`RFC850_date std d ;;
+Sunday, 06-Nov-94 08:49:37 GMT
+- : unit = ()
+```
+```
+```
