@@ -22,7 +22,7 @@ type month =
 type t
 type encode_fmt = [ `IMF_fixdate | `RFC850_date | `ASCTIME_date ]
 
-val create : day_name -> (day * month * year) -> (hour * minute * second) -> t
+val create : day_name -> day * month * year -> hour * minute * second -> t
 val decode : string -> t
 val encode : ?encode_fmt:encode_fmt -> t -> string
 val pp : ?encode_fmt:encode_fmt -> Format.formatter -> t -> unit
