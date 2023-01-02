@@ -68,6 +68,16 @@ Sunday, 06-Nov-94 08:49:37 GMT
 - : unit = ()
 ```
 
+Create RFC850 date and encode it.
+
+```ocaml
+# let d = Http_date.create ~day_name:`Mon ~day:23 ~month:`Feb ~year:22 ~hour:2 ~minute:59 ~second:58 ;;
+val d : Http_date.t = <abstr>
+
+# Http_date.encode ~encode_fmt:`RFC850_date d ;;
+- : string = "Monday, 23-Feb-22 02:59:58 GMT"
+```
+
 ### ASCTIME date
 
 Decode ASCTIME specified date format.
