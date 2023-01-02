@@ -26,29 +26,18 @@ http_date :
 imf_fixdate : day_name=DAY_NAME COMMA SP date=date1 SP time=time_of_day SP GMT
   { Date_time.create day_name date time }
 
-date1 : day=DIGIT2 SP month=MONTH SP year=DIGIT4
-  {
-    let day = Date_time.day_of_int day in
-    (day, month, year)
-  }
+date1 : day=DIGIT2 SP month=MONTH SP year=DIGIT4 { (day, month, year) }
 
-time_of_day :
-  | hour=DIGIT2 COLON minute=DIGIT2 COLON second=DIGIT2
-    { Date_time.parse_time (hour, minute, second) }
+time_of_day : hour=DIGIT2 COLON minute=DIGIT2 COLON second=DIGIT2 { (hour, minute, second) }
 
 rfc850_date : day_name=DAY_NAME_L COMMA SP date=date2 SP time=time_of_day SP GMT
   { Date_time.create day_name date time }
 
-date2 : day=DIGIT2 DASH month=MONTH DASH year=DIGIT2
-  {
-    let day = Date_time.day_of_int day in
-    (day, month, year)
-  }
+date2 : day=DIGIT2 DASH month=MONTH DASH year=DIGIT2 { (day, month, year) }
 
 asctime_date : day_name=DAY_NAME SP date=date3 SP time=time_of_day SP year=DIGIT4
   {
     let (month, day) = date in
-    let day = Date_time.day_of_int day in
     Date_time.create day_name (day, month, year) time
   }
 
