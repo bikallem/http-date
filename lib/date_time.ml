@@ -21,9 +21,6 @@ type month =
 
 type t = day_name * day * month * year * hour * minute * second
 
-let create dayname (day, month, year) (h, m, s) =
-  (dayname, day, month, year, h, m, s)
-
 let parse_time (hh, mm, ss) =
   let hh =
     if hh >= 0 && hh <= 23 then hh
@@ -41,10 +38,17 @@ let parse_time (hh, mm, ss) =
 
 let day_of_int day =
   if day >= 1 && day <= 31 then day
-  else
-    raise
-      (Invalid_argument
-         ("Day - " ^ string_of_int day ^ ". Day must be >= 1 and <= 31"))
+  else raise (Invalid_argument "day must be >= 1 and <= 31")
+
+let year_of_int year =
+  if year >= 1 && year <= 9999 then year
+  else raise @@ Invalid_argument "year must be >=1 and <= 9999"
+
+let create dayname (day, month, year) tm =
+  let h, m, s = parse_time tm in
+  let day = day_of_int day in
+  let year = year_of_int year in
+  (dayname, day, month, year, h, m, s)
 
 let day_name_to_string t =
   match t with
