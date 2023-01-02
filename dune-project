@@ -24,7 +24,8 @@
  (depends
   (ocaml
    (>= 5.0))
-  dune
+  (dune
+   (>= 2.6))
   (mdx
    (and
     (>= 2.1.0)
