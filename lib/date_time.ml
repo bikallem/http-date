@@ -19,7 +19,15 @@ type month =
   | `Nov
   | `Dec ]
 
-type t = day_name * day * month * year * hour * minute * second
+type t = {
+  day_name : day_name;
+  day : day;
+  month : month;
+  year : year;
+  hour : hour;
+  minute : minute;
+  second : second;
+}
 
 let parse_time (hh, mm, ss) =
   let hh =
@@ -44,11 +52,11 @@ let year_of_int year =
   if year >= 1 && year <= 9999 then year
   else raise @@ Invalid_argument "year must be >=1 and <= 9999"
 
-let create dayname (day, month, year) tm =
-  let h, m, s = parse_time tm in
+let create day_name (day, month, year) tm =
+  let hour, minute, second = parse_time tm in
   let day = day_of_int day in
   let year = year_of_int year in
-  (dayname, day, month, year, h, m, s)
+  { day_name; day; month; year; hour; minute; second }
 
 let day_name_to_string t =
   match t with
@@ -126,17 +134,17 @@ let month_of_string s =
 type encode_fmt = [ `IMF_fixdate | `RFC850_date | `ASCTIME_date ]
 
 let pp ?(encode_fmt = `IMF_fixdate) fmt
-    (day_name, day, month, year, hour, minutes, seconds) =
+    { day_name; day; month; year; hour; minute; second } =
   match encode_fmt with
   | `IMF_fixdate ->
       Format.fprintf fmt "%s, %02d %s %04d %02d:%02d:%02d GMT%!"
         (day_name_to_string day_name)
-        day (month_to_string month) year hour minutes seconds
+        day (month_to_string month) year hour minute second
   | `RFC850_date ->
       Format.fprintf fmt "%s, %02d-%s-%02d %02d:%02d:%02d GMT%!"
         (day_name_to_string_l day_name)
-        day (month_to_string month) year hour minutes seconds
+        day (month_to_string month) year hour minute second
   | `ASCTIME_date ->
       Format.fprintf fmt "%s %s %2d %02d:%02d:%02d %04d%!"
         (day_name_to_string day_name)
-        (month_to_string month) day hour minutes seconds year
+        (month_to_string month) day hour minute second year
