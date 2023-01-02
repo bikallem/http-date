@@ -53,6 +53,14 @@ let create ~day_name ~day ~month ~year ~hour ~minute ~second =
   let year = year_of_int year in
   { day_name; day; month; year; hour; minute; second }
 
+let day_name t = t.day_name
+let day t = t.day
+let month t = t.month
+let year t = t.year
+let hour t = t.hour
+let minute t = t.minute
+let second t = t.second
+
 let day_name_to_string t =
   match t with
   | `Mon -> "Mon"
