@@ -24,33 +24,27 @@ type t = {
   second : int;
 }
 
-let parse_time (hh, mm, ss) =
-  let hh =
-    if hh >= 0 && hh <= 23 then hh
+let create ~day_name ~day ~month ~year ~hour ~minute ~second =
+  let hour =
+    if hour >= 0 && hour <= 23 then hour
     else raise @@ Invalid_argument "hour must be >=0 and <= 23"
   in
-  let mm =
-    if mm >= 0 && mm <= 59 then mm
+  let minute =
+    if minute >= 0 && minute <= 59 then minute
     else raise @@ Invalid_argument "minute must be >=0 and <= 59"
   in
-  let ss =
-    if ss >= 0 && ss <= 60 then ss
+  let second =
+    if second >= 0 && second <= 60 then second
     else raise @@ Invalid_argument "second must be btween >=0 and <=60"
   in
-  (hh, mm, ss)
-
-let day_of_int day =
-  if day >= 1 && day <= 31 then day
-  else raise (Invalid_argument "day must be >= 1 and <= 31")
-
-let year_of_int year =
-  if year >= 1 && year <= 9999 then year
-  else raise @@ Invalid_argument "year must be >=1 and <= 9999"
-
-let create ~day_name ~day ~month ~year ~hour ~minute ~second =
-  let hour, minute, second = parse_time (hour, minute, second) in
-  let day = day_of_int day in
-  let year = year_of_int year in
+  let day =
+    if day >= 1 && day <= 31 then day
+    else raise (Invalid_argument "day must be >= 1 and <= 31")
+  in
+  let year =
+    if year >= 1 && year <= 9999 then year
+    else raise @@ Invalid_argument "year must be >=1 and <= 9999"
+  in
   { day_name; day; month; year; hour; minute; second }
 
 let day_name t = t.day_name
