@@ -4,7 +4,7 @@
 
 (using menhir 2.0)
 
-(using mdx 0.2)
+(using mdx 0.3)
 
 (generate_opam_files true)
 
