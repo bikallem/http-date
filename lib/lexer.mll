@@ -16,7 +16,7 @@ rule token = parse
 | month      { MONTH (Date_time.month_of_string month) }
 | digit_2    { DIGIT2 (int_of_string num) }
 | digit_4    { DIGIT4 (int_of_string num) }
-| digit      { DIGIT (Printf.sprintf "%c" num |> int_of_string) }
+| digit      { DIGIT (int_of_string @@ Char.escaped num) }
 | ','        { COMMA }
 | ':'        { COLON }
 | '-'        { DASH }
