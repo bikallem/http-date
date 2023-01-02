@@ -24,15 +24,15 @@ type t = day_name * day * month * year * hour * minute * second
 let parse_time (hh, mm, ss) =
   let hh =
     if hh >= 0 && hh <= 23 then hh
-    else raise @@ Invalid_argument (Printf.sprintf "hour %d" hh)
+    else raise @@ Invalid_argument "hour must be >=0 and <= 23"
   in
   let mm =
     if mm >= 0 && mm <= 59 then mm
-    else raise @@ Invalid_argument (Printf.sprintf "minute %d" mm)
+    else raise @@ Invalid_argument "minute must be >=0 and <= 59"
   in
   let ss =
     if ss >= 0 && ss <= 60 then ss
-    else raise @@ Invalid_argument (Printf.sprintf "second %d" ss)
+    else raise @@ Invalid_argument "second must be btween >=0 and <=60"
   in
   (hh, mm, ss)
 
