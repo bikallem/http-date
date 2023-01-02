@@ -1,9 +1,4 @@
-type year = int
-type hour = int
-type minute = int
-type second = int
 type day_name = [ `Mon | `Tue | `Wed | `Thu | `Fri | `Sat | `Sun ]
-type day = int
 
 type month =
   [ `Jan
@@ -21,12 +16,12 @@ type month =
 
 type t = {
   day_name : day_name;
-  day : day;
+  day : int;
   month : month;
-  year : year;
-  hour : hour;
-  minute : minute;
-  second : second;
+  year : int;
+  hour : int;
+  minute : int;
+  second : int;
 }
 
 let parse_time (hh, mm, ss) =
@@ -52,8 +47,8 @@ let year_of_int year =
   if year >= 1 && year <= 9999 then year
   else raise @@ Invalid_argument "year must be >=1 and <= 9999"
 
-let create day_name (day, month, year) tm =
-  let hour, minute, second = parse_time tm in
+let create ~day_name ~day ~month ~year ~hour ~minute ~second =
+  let hour, minute, second = parse_time (hour, minute, second) in
   let day = day_of_int day in
   let year = year_of_int year in
   { day_name; day; month; year; hour; minute; second }
