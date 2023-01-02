@@ -9,8 +9,15 @@
     The current supported formats for decoding/encoding are as follows:
 
     - IMF(Internet Message Format) date, eg ["Sun, 06 Nov 1994 08:49:37 GMT"]
-    - RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"]
-    - asctime date, eg ["Sun Nov  6 08:49:37 1994"]
+    - RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete}
+    - asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete}
+
+    {b Note:}
+
+    [RFC 850] and [asctime] are both considered obsolete. It is not advised for
+    usage in new applications. They are both included here for compliance of RFC
+    9110 and for backwards compatibility. [IMF fixdate] is the recommended
+    format for usage.
 
     {b References}
 
