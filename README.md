@@ -1,6 +1,6 @@
 # HTTP Date
 
-HTTP timestamp decoders and encoders complaint to RFC 9110 (HTTP Semantics).
+HTTP timestamp decoders and encoders complaint to RFC 9110 (HTTP Semantics). It is designed to be used with HTTP `Date` header field.
 
 The current supported formats for decoding/encoding are as follows:
   - IMF(Internet Message Format) date, eg `Sun, 06 Nov 1994 08:49:37 GMT`
@@ -9,7 +9,7 @@ The current supported formats for decoding/encoding are as follows:
 
 API usage:
 
- - Decoding IMF fixdate formatted timestamp values:
+ - Decoding and encoding IMF fixdate formatted timestamp values:
 
 ```ocaml
 # let d = Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT";;
