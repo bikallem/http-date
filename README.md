@@ -12,14 +12,11 @@ API usage:
  - Decoding IMF fixdate formatted timestamp values:
 
 ```ocaml
-# let d = Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT" ;;
-val d : Http_date.t = <abstr>
+# let d = Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT";;
+val d : Ptime.t = <abstr>
 
-# Http_date.year d ;;
-- : int = 1994
-
-# Http_date.month d ;;
-- : Http_date.month = `Nov
+# Ptime.to_date_time d ;;
+- : Ptime.date * Ptime.time = ((1994, 11, 6), ((8, 49, 37), 0))
 
 # Http_date.encode d ;;
 - : string = "Sun, 06 Nov 1994 08:49:37 GMT"

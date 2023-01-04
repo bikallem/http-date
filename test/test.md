@@ -17,13 +17,13 @@ Decode IMF (Internet Message Format) fixdate.
 val imf_fixdate : string = "Sun, 06 Nov 1994 08:49:37 GMT"
 
 # let d = Http_date.decode imf_fixdate ;;
-val d : Http_date.t = <abstr>
+val d : Ptime.t = <abstr>
 ```
 
 Encode IMF fixdate value.
 
 ```ocaml
-# let s = Http_date.encode ~encode_fmt:`IMF_fixdate d ;;
+# let s = Http_date.(encode ~encoding:IMF d) ;;
 val s : string = "Sun, 06 Nov 1994 08:49:37 GMT"
 
 # String.equal imf_fixdate s ;;
@@ -46,14 +46,17 @@ Decode RFC-850 specified date format.
 # let rfc850_date = "Sunday, 06-Nov-94 08:49:37 GMT" ;;
 val rfc850_date : string = "Sunday, 06-Nov-94 08:49:37 GMT"
 
-# let d = Http_date.decode rfc850_date ;;
-val d : Http_date.t = <abstr>
+# let d = Http_date.decode ~century:19 rfc850_date ;;
+val d : Ptime.t = <abstr>
+
+# Ptime.to_date_time d ;;
+- : Ptime.date * Ptime.time = ((1994, 11, 6), ((8, 49, 37), 0))
 ```
 
 Encode RFC850 date.
 
 ```ocaml
-# let s = Http_date.encode ~encode_fmt:`RFC850_date d ;;
+# let s = Http_date.(encode ~encoding:RFC850 d) ;;
 val s : string = "Sunday, 06-Nov-94 08:49:37 GMT"
 
 # String.equal rfc850_date s ;;
@@ -63,19 +66,9 @@ val s : string = "Sunday, 06-Nov-94 08:49:37 GMT"
 Pretty-print RFC850 date.
 
 ```ocaml
-# Http_date.pp ~encode_fmt:`RFC850_date std d ;;
+# Http_date.(pp ~encoding:RFC850 std d) ;;
 Sunday, 06-Nov-94 08:49:37 GMT
 - : unit = ()
-```
-
-Create RFC850 date and encode it.
-
-```ocaml
-# let d = Http_date.create ~day_name:`Mon ~day:23 ~month:`Feb ~year:22 ~hour:2 ~minute:59 ~second:58 ;;
-val d : Http_date.t = <abstr>
-
-# Http_date.encode ~encode_fmt:`RFC850_date d ;;
-- : string = "Monday, 23-Feb-22 02:59:58 GMT"
 ```
 
 ### ASCTIME date
@@ -87,13 +80,13 @@ Decode ASCTIME specified date format.
 val asctime_date : string = "Sun Nov  6 08:49:37 1994"
 
 # let d = Http_date.decode asctime_date ;;
-val d : Http_date.t = <abstr>
+val d : Ptime.t = <abstr>
 ```
 
 Encode ASCTIME date.
 
 ```ocaml
-# let s = Http_date.encode ~encode_fmt:`ASCTIME_date d ;;
+# let s = Http_date.(encode ~encoding:ASCTIME d) ;;
 val s : string = "Sun Nov  6 08:49:37 1994"
 
 # String.equal asctime_date s ;;
@@ -103,7 +96,7 @@ val s : string = "Sun Nov  6 08:49:37 1994"
 Pretty-print ASCTIME date.
 
 ```ocaml
-# Http_date.pp ~encode_fmt:`ASCTIME_date std d ;;
+# Http_date.(pp ~encoding:ASCTIME std d) ;;
 Sun Nov  6 08:49:37 1994
 - : unit = ()
 ```

@@ -1,5 +1,6 @@
 (library
  (public_name http-date)
+ (libraries ptime)
  (name http_date))
 
 (ocamllex lexer)

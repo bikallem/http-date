@@ -1,4 +1,4 @@
 (mdx
  (package http-date)
- (libraries http-date)
+ (libraries http-date ptime)
  (files README.md))

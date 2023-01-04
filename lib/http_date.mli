@@ -12,96 +12,52 @@
     - RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete}
     - asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete}
 
-    {b Note:}
-
-    [RFC 850] and [asctime] are both considered obsolete. It is not advised for
-    usage in new applications. They are both included here for compliance of RFC
-    9110 and for backwards compatibility. [IMF fixdate] is the recommended
-    format for usage.
-
     {b References}
 
     - RFC 9110. {{:https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.7}
       {e Date/Time Formats}} *)
 
-(** {1 HTTP Timestamp values} *)
+(** Encoding format specification for {!val:encode}.
 
-type t
-(** Represents a successfully decoded or created HTTP timestamp value. *)
+    {e Note:}
 
-type day_name = [ `Mon | `Tue | `Wed | `Thu | `Fri | `Sat | `Sun ]
-(** Name of the day in a week. *)
+    {!constructor:RFC850} and {!constructor:ASCTIME} are both considered
+    obsolete. It is not advised for usage in new applications. They are both
+    included here for compliance of RFC 9110 and for backwards compatibility.
+    {!constructor:IMF} is the recommended format for usage. *)
+type encoding =
+  | IMF
+      (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"] *)
+  | RFC850
+      (** RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete} *)
+  | ASCTIME  (** asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete} *)
 
-type month =
-  [ `Jan
-  | `Feb
-  | `Mar
-  | `Apr
-  | `May
-  | `Jun
-  | `Jul
-  | `Aug
-  | `Sep
-  | `Oct
-  | `Nov
-  | `Dec ]
-(** Month of a year. *)
+val decode : ?century:int -> string -> Ptime.t
+(** [decode s] is [ptime] if [s] contains a valid textual representation of
+    formats defined in {!type:encoding}.
 
-(** {1:decode Decoding/Create HTTP timestamps} *)
+    [century] An integer value representing century component of a year. This is
+    used to decode the correct year component of [ptime], if [s] contains
+    {e RFC 850} encoded date value, e.g. year [96] is decoded as [1996] if
+    [century = 19]. If [century] is not given, then the decoded year component
+    is used as is, i.e. [96].
 
-val create :
-  day_name:day_name ->
-  day:int ->
-  month:month ->
-  year:int ->
-  hour:int ->
-  minute:int ->
-  second:int ->
-  t
-(** [create] is [t] if given values are all valid.
-
-    Valid values for the parameters are as follows:
-
-    - [day] is [>= 1 && <= 31]
-    - [year] is [>=1 && <= 9999]
-    - [hour] is [>=0 && <= 23]
-    - [minute] is [>=0 && <= 59]
-    - [second] is [>=0 && <= 59]
-
-    @raise Invalid_argument
-      if a given value to [create] is invalid. The description text specifies
-      the reason. *)
-
-val decode : string -> t
-(** [decode s] is [t] if [s] contains a valid textual representation of [t].
-
-    {e Decoding string in IMF fix date format.}
+    {e decoding string in IMF fix date format:}
 
     {[
       Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT"
     ]}
     @raise Invalid_argument
-      if [s] contains one or more invalid values. See {!create}. *)
+      if [s] contains date format not supported by {!type:encoding}. *)
 
 (** {1:encode Encode HTTP timestamps} *)
 
-type encode_fmt = [ `IMF_fixdate | `RFC850_date | `ASCTIME_date ]
-(** Encoding format specification for {!val:encode}. *)
-
-val encode : ?encode_fmt:encode_fmt -> t -> string
-(** [encode ?encode_fmt t] encodes [t] into a given [encode_fmt] textual
-    representation. *)
-
-(** {1 Retrieve timestamp details} *)
-
-val day_name : t -> day_name
-val day : t -> int
-val month : t -> month
-val year : t -> int
-val hour : t -> int
-val minute : t -> int
-val second : t -> int
+val encode : ?encoding:encoding -> Ptime.t -> string
+(** [encode ?encoding ptime] encodes [ptime] into a given [encoding] textual
+    representation. The default value of [encoding] is {!constructor:IMF}. *)
 
 (** {1 Pretty Printing timestamps} *)
 
-val pp : ?encode_fmt:encode_fmt -> Format.formatter -> t -> unit
+val pp : ?encoding:encoding -> Format.formatter -> Ptime.t -> unit
+(** [pp ?encoding fmt ptime] is like [encode ?encoding ptime] except it prints
+    out to [fmt] instead of a string. *)
