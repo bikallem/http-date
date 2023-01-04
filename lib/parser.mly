@@ -1,4 +1,9 @@
 %{
+(*---------------------------------------------------------------------------
+   Copyright (c) 2022 Bikal Gurung. All rights reserved.
+   Distributed under the MPL-2.0 license.
+   See (https://www.mozilla.org/media/MPL/2.0/index.815ca599c9df.txt).
+  ---------------------------------------------------------------------------*)
 %}
 
 %token DAY_NAME
