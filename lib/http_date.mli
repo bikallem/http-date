@@ -12,6 +12,8 @@
     - RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete}
     - asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete}
 
+    {b HTTP timestamps are always in GMT/UTC}
+
     {b References}
 
     - RFC 9110. {{:https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.7}
