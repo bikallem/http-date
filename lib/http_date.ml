@@ -55,22 +55,17 @@ let pp ?(encoding = IMF) fmt ptime =
         (day_name_string ptime) (month_string month) day hour minute second year
 
 let decode ?century s =
-  try
-    let lexbuf = Lexing.from_string s in
-    let encoding, date, time = Parser.http_date Lexer.token lexbuf in
-    match encoding with
-    | `IMF -> Ptime.of_date_time (date, time) |> Option.get
-    | `RFC850 ->
-        let y, m, d = date in
-        let y =
-          match century with Some century -> (century * 100) + y | None -> y
-        in
-        Ptime.of_date_time ((y, m, d), time) |> Option.get
-    | `ASCTIME -> Ptime.of_date_time (date, time) |> Option.get
-  with exn ->
-    raise
-    @@ Invalid_argument
-         ("s contains invalid date time format. " ^ Printexc.to_string exn)
+  let lexbuf = Lexing.from_string s in
+  let encoding, date, time = Parser.http_date Lexer.token lexbuf in
+  match encoding with
+  | `IMF -> Ptime.of_date_time (date, time) |> Option.get
+  | `RFC850 ->
+      let y, m, d = date in
+      let y =
+        match century with Some century -> (century * 100) + y | None -> y
+      in
+      Ptime.of_date_time ((y, m, d), time) |> Option.get
+  | `ASCTIME -> Ptime.of_date_time (date, time) |> Option.get
 
 let encode ?(encoding = IMF) t =
   let buf = Buffer.create 29 in

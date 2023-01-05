@@ -100,3 +100,18 @@ Pretty-print ASCTIME date.
 Sun Nov  6 08:49:37 1994
 - : unit = ()
 ```
+
+### Invalid datetime validation errors 
+
+```ocaml
+# Http_date.decode "Sun, 70 Nov 1994 08:49:37 GMT" ;;
+Exception:
+Invalid_argument "date - (y,m,d) - value '(1994, 11, 70)' is invalid".
+
+# Http_date.decode "zzz, 6 Nov 1994 08:49:37 GMT" ;;
+Exception: Invalid_argument "Unrecognized character 'z' at position 1".
+
+# Http_date.decode "Sun, 07 Nov 1994 08:67:37 GMT" ;;
+Exception:
+Invalid_argument "time - (h,m,s) - value '(8, 67, 37)' is invalid".
+```

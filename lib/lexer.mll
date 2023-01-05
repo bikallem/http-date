@@ -39,4 +39,4 @@ rule token = parse
 | gmt        { GMT }
 | ' '        { SP }
 | eof        { EOF }
-| _ as c     { failwith @@ Printf.sprintf "Unrecognized character '%c'" c }
+| _ as c     { raise @@ Invalid_argument (Printf.sprintf "Unrecognized character '%c' at position %d" c (Lexing.lexeme_end lexbuf)) }
