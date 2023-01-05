@@ -24,8 +24,7 @@
  (depends
   (ocaml
    (>= 4.08.0))
-  (dune
-   (>= 2.6))
+  dune
   (ptime
    (>= 1.1.0))
   (menhir

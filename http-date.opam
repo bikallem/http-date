@@ -9,7 +9,7 @@ homepage: "https://github.com/bikallem/http-date"
 bug-reports: "https://github.com/bikallem/http-date/issues"
 depends: [
   "ocaml" {>= "4.08.0"}
-  "dune" {>= "3.6" & >= "2.6"}
+  "dune" {>= "3.6"}
   "ptime" {>= "1.1.0"}
   "menhir" {>= "20220210"}
   "mdx" {>= "2.1.0" & with-test}
