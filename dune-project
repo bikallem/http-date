@@ -23,7 +23,7 @@
  (description "RFC 9110 compliant HTTP datetime decoder and encoder")
  (depends
   (ocaml
-   (>= 5.0))
+   (>= 4.08.0))
   (dune
    (>= 2.6))
   (ptime
