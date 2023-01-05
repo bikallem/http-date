@@ -67,7 +67,10 @@ let decode ?century s =
         in
         Ptime.of_date_time ((y, m, d), time) |> Option.get
     | `ASCTIME -> Ptime.of_date_time (date, time) |> Option.get
-  with exn -> failwith @@ Printexc.to_string exn
+  with exn ->
+    raise
+    @@ Invalid_argument
+         ("s contains invalid date time format. " ^ Printexc.to_string exn)
 
 let encode ?(encoding = IMF) t =
   let buf = Buffer.create 29 in
