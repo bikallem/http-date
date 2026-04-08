@@ -19,7 +19,16 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          ocamlPackages = pkgs.ocaml-ng.ocamlPackages_5_4;
+
+          # nixpkgs builds mdx against a stripped-down `logs` (no lwt/jsoo) to
+          # break a dep cycle. utop pulls in the full `logs`, so the two
+          # propagated copies collide in the dev shell. Force mdx onto the
+          # default `logs` to keep findlib happy.
+          ocamlPackages = pkgs.ocaml-ng.ocamlPackages_5_4.overrideScope (
+            oself: osuper: {
+              mdx = osuper.mdx.override { inherit (oself) logs; };
+            }
+          );
 
           # nixpkgs ships dune 3.21.1; build the 3.22.1 binary standalone so
           # the rest of ocamlPackages (ocaml-lsp, etc.) keeps its matching
@@ -43,6 +52,7 @@
               ocamlPackages.mdx
               ocamlPackages.ocaml-lsp
               ocamlPackages.ocamlformat
+              ocamlPackages.utop
             ];
           };
         }
