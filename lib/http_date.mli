@@ -16,8 +16,9 @@
 
     {b References}
 
-    - RFC 9110. {{:https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.7}
-      {e Date/Time Formats}} *)
+    - RFC 9110.
+      {{:https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.7}
+       {e Date/Time Formats}} *)
 
 (** Encoding format specification for {!val:encode}.
 
@@ -29,7 +30,8 @@
     {!constructor:IMF} is the recommended format for usage. *)
 type encoding =
   | IMF
-      (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"] *)
+      (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"]
+      *)
   | RFC850
       (** RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete} *)
   | ASCTIME  (** asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete} *)
@@ -47,7 +49,7 @@ val decode : ?century:int -> string -> Ptime.t
     {e decoding string in IMF fix date format:}
 
     {[
-      Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT"
+    Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT"
     ]}
     @raise Invalid_argument
       if [s] contains date format not supported by {!type:encoding}. *)
