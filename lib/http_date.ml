@@ -72,3 +72,5 @@ let encode ?(encoding = IMF) t =
   let fmt = Format.formatter_of_buffer buf in
   pp ~encoding fmt t;
   Buffer.contents buf
+
+module Date = Date

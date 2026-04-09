@@ -1,10 +1,10 @@
-(lang dune 3.6)
+(lang dune 3.22)
 
 (name http-date)
 
 (using menhir 2.0)
 
-(using mdx 0.3)
+(using mdx 0.4)
 
 (generate_opam_files true)
 

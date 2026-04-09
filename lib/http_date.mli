@@ -65,3 +65,12 @@ val encode : ?encoding:encoding -> Ptime.t -> string
 val pp : ?encoding:encoding -> Format.formatter -> Ptime.t -> unit
 (** [pp ?encoding fmt ptime] is like [encode ?encoding ptime] except it prints
     out to [fmt] instead of a string. *)
+
+module Date : sig
+  type day = Mon | Tue | Wed | Thu | Fri | Sat | Sun
+
+  val decode : string -> day
+  (** [decode s] decodes [s] to short date.
+
+      @raise Invalid_argument if [s] is none of IMF, RFC850 or ASCTIME. *)
+end
