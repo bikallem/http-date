@@ -7,7 +7,6 @@ open Http_date
 ## Short Day
 
 ```ocaml
-# let day = List.map Date.decode ["Mon"; "Tue"; "Wed"; "Thu"; "Fri"; "Sat"; "Sun"];;
-val day : Date.day list =
-  [Date.Mon; Date.Tue; Date.Wed; Date.Thu; Date.Fri; Date.Sat; Date.Sun]
+# let imf_fixdate = Date.decode "Sun, 06 Nov 1994 08:49:37 GMT" ;;
+val imf_fixdate : Date.date * Date.time = ((6, 11, 1994), (8, 49, 37))
 ```
