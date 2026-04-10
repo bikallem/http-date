@@ -9,12 +9,6 @@ let expect d c : unit =
   if c = c1 then advance d 1
   else Printf.sprintf "Expected %C but got %C" c c1 |> invalid_arg
 
-let day_name_short d : unit =
-  let day = String.sub d.buf d.pos 3 in
-  match day with
-  | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun" -> advance d 3
-  | _ -> Printf.sprintf "Invalid day value '%s'" day |> invalid_arg
-
 let[@inline always] space d : unit = expect d ' '
 let[@inline always] comma d : unit = expect d ','
 let[@inline always] colon d : unit = expect d ':'
@@ -73,6 +67,18 @@ let day_name_token d : day_token =
       Long
   | s -> invalid_arg @@ "Invalid dayname value '" ^ s ^ "'"
 
+type punctuation_token = Comma | Space
+
+let punctuation_token d : punctuation_token =
+  let tok =
+    match d.buf.[d.pos] with
+    | ' ' -> Space
+    | ',' -> Comma
+    | c -> Printf.sprintf "Invalid punctuation token '%C'" c |> invalid_arg
+  in
+  advance d 1;
+  tok
+
 let year d : int = digits d 4
 let day d = digits d 2
 
@@ -102,7 +108,6 @@ let gmt d : unit =
 
 (* -- IMF datetime -- *)
 let imf_date d : date * time =
-  comma d;
   space d;
   let date1 = date1 d in
   space d;
@@ -112,17 +117,6 @@ let imf_date d : date * time =
   (date1, time_of_day)
 
 (* -- RFC850 datetime -- *)
-let day_name_long d : unit =
-  let day_name = Buffer.create 7 in
-  while d.buf.[d.pos] != ' ' do
-    Buffer.add_char day_name d.buf.[d.pos];
-    advance d 1
-  done;
-  match Buffer.contents day_name with
-  | ( "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday"
-    | "Sunday" ) as x ->
-      advance d (String.length x)
-  | x -> invalid_arg @@ "Invalid long dayname value '" ^ x ^ "'"
 
 let date2 d : date =
   let dd = day d in
@@ -130,7 +124,6 @@ let date2 d : date =
   let m = month d in
   expect d '-';
   let y = digits d 2 in
-
   (y, m, dd)
 
 let rfc850_date d : date * time =
@@ -143,6 +136,15 @@ let rfc850_date d : date * time =
   gmt d;
   (date2, time)
 
+(* asctime datetime *)
+let asctime_date d = failwith "not implemented"
+
 let decode s : date * time =
   let d = { buf = s; pos = 0 } in
-  match day_name_token d with Long -> rfc850_date d | Short -> imf_date d
+  match day_name_token d with
+  | Long -> rfc850_date d
+  | Short ->
+      begin match punctuation_token d with
+      | Comma -> imf_date d
+      | Space -> asctime_date d
+      end
