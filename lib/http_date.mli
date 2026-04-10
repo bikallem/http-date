@@ -67,8 +67,8 @@ val pp : ?encoding:encoding -> Format.formatter -> Ptime.t -> unit
     out to [fmt] instead of a string. *)
 
 module Date : sig
-  val decode : string -> Ptime.t option
-  (** [decode s] decodes [s] to short date.
+  val decode : string -> Ptime.t
+  (** [decode s] decodes HTTP date value in [s] to [Ptime.t].
 
       @raise Invalid_argument if [s] is none of IMF, RFC850 or ASCTIME. *)
 end

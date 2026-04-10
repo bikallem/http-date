@@ -88,9 +88,28 @@ let imf_date d : date * time =
   gmt d;
   (date1, time_of_day)
 
-let decode s : Ptime.t option =
+let max_month_day y m =
+  let is_leap_year y = y mod 4 = 0 && (y mod 100 <> 0 || y mod 400 = 0) in
+  let mlen =
+    [| 31; 28 (* or not *); 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 |]
+  in
+  if m = 2 && is_leap_year y then 29 else mlen.(m - 1)
+
+let is_valid_date_time ((y, m, d), (hh, mm, ss)) : bool =
+  let valid_date =
+    0 <= y && y <= 9999 && 1 <= m && m <= 12 && 1 <= d && d <= max_month_day y m
+  in
+  let valid_time =
+    0 <= hh && hh <= 23 && 0 <= mm && hh <= 59 && 0 <= ss && ss <= 60
+  in
+  valid_date && valid_time
+
+let decode s : Ptime.t =
   let d = { buf = s; pos = 0 } in
   let date, time = imf_date d in
-  (* timezone offset is 0 for GMT *)
-  let tz_offset = 0 in
-  Ptime.of_date_time (date, (time, tz_offset))
+  if not (is_valid_date_time (date, time)) then
+    invalid_arg "Invalid date time value"
+  else
+    (* timezone offset is 0 for GMT. GMT is the HTTP specified timezone. *)
+    let tz_offset = 0 in
+    Ptime.of_date_time (date, (time, tz_offset)) |> Option.get
