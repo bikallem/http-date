@@ -1,5 +1,5 @@
 type decoder = { buf : string; mutable pos : int }
-type date = int * int * int (* day, month, year *)
+type date = int * int * int (* year, month, day *)
 type time = int * int * int (* hour, minute, second *)
 
 let advance d n : unit = d.pos <- d.pos + n
@@ -53,15 +53,15 @@ let digits d (n : int) : int =
 let year d : int = digits d 4
 let day d = digits d 2
 
-let date1 d : int * int * int =
+let date1 d : date =
   let dd = day d in
   space d;
   let m = month d in
   space d;
   let y = year d in
-  (dd, m, y)
+  (y, m, dd)
 
-let time_of_day d : int * int * int =
+let time_of_day d : time =
   let hour = digits d 2 in
   colon d;
   let minute = digits d 2 in
@@ -88,6 +88,9 @@ let imf_date d : date * time =
   gmt d;
   (date1, time_of_day)
 
-let decode s : date * time =
+let decode s : Ptime.t option =
   let d = { buf = s; pos = 0 } in
-  imf_date d
+  let date, time = imf_date d in
+  (* timezone offset is 0 for GMT *)
+  let tz_offset = 0 in
+  Ptime.of_date_time (date, (time, tz_offset))
