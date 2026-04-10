@@ -2,7 +2,7 @@ type decoder = { buf : string; mutable pos : int }
 type date = int * int * int (* year, month, day *)
 type time = int * int * int (* hour, minute, second *)
 
-let advance d n : unit = d.pos <- d.pos + n
+let[@inline always] advance d n : unit = d.pos <- d.pos + n
 
 let expect d c : unit =
   let c1 = d.buf.[d.pos] in
@@ -15,9 +15,9 @@ let day_name_short d : unit =
   | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun" -> advance d 3
   | _ -> Printf.sprintf "Invalid day value '%s'" day |> invalid_arg
 
-let space d : unit = expect d ' '
-let comma d : unit = expect d ','
-let colon d : unit = expect d ':'
+let[@inline always] space d : unit = expect d ' '
+let[@inline always] comma d : unit = expect d ','
+let[@inline always] colon d : unit = expect d ':'
 
 let month d : int =
   let m = String.sub d.buf d.pos 3 in
@@ -77,6 +77,7 @@ let gmt d : unit =
       Printf.sprintf "expected '%C' but got '%C'" txt.(i) c |> invalid_arg
   done
 
+(* -- IMF datetime -- *)
 let imf_date d : date * time =
   day_name_short d;
   comma d;
@@ -88,28 +89,40 @@ let imf_date d : date * time =
   gmt d;
   (date1, time_of_day)
 
-let max_month_day y m =
-  let is_leap_year y = y mod 4 = 0 && (y mod 100 <> 0 || y mod 400 = 0) in
-  let mlen =
-    [| 31; 28 (* or not *); 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 |]
-  in
-  if m = 2 && is_leap_year y then 29 else mlen.(m - 1)
+(* -- RFC850 datetime -- *)
+let day_name_long d : unit =
+  let day_name = Buffer.create 7 in
+  while d.buf.[d.pos] != ' ' do
+    Buffer.add_char day_name d.buf.[d.pos];
+    advance d 1
+  done;
+  match Buffer.contents day_name with
+  | ( "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday"
+    | "Sunday" ) as x ->
+      advance d (String.length x)
+  | x -> invalid_arg @@ "Invalid long dayname value '" ^ x ^ "'"
 
-let is_valid_date_time ((y, m, d), (hh, mm, ss)) : bool =
-  let valid_date =
-    0 <= y && y <= 9999 && 1 <= m && m <= 12 && 1 <= d && d <= max_month_day y m
-  in
-  let valid_time =
-    0 <= hh && hh <= 23 && 0 <= mm && hh <= 59 && 0 <= ss && ss <= 60
-  in
-  valid_date && valid_time
+let date2 d : date =
+  let dd = day d in
+  expect d '-';
+  let m = month d in
+  expect d '-';
+  let y = digits d 2 in
 
-let decode s : Ptime.t =
+  (y, m, dd)
+
+let rfc850_date d : date * time =
+  day_name_long d;
+  comma d;
+  space d;
+  let date2 = date2 d in
+  space d;
+  let time = time_of_day d in
+  space d;
+  gmt d;
+  (date2, time)
+
+let decode s : date * time =
   let d = { buf = s; pos = 0 } in
   let date, time = imf_date d in
-  if not (is_valid_date_time (date, time)) then
-    invalid_arg "Invalid date time value"
-  else
-    (* timezone offset is 0 for GMT. GMT is the HTTP specified timezone. *)
-    let tz_offset = 0 in
-    Ptime.of_date_time (date, (time, tz_offset)) |> Option.get
+  (date, time)
