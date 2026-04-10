@@ -18,3 +18,11 @@ val imf_fixdate : Date.date * Date.time = ((1994, 11, 6), (8, 49, 37))
 val rfc850_date : Date.date * Date.time = ((94, 11, 6), (8, 49, 37))
 ```
 
+## ASCTIME date
+
+Decode ASCTIME specified date format.
+
+```ocaml
+# let asctime_date = Date.decode "Sun Nov  6 08:49:37 1994" ;;
+val asctime_date : Date.date * Date.time = ((1994, 11, 6), (8, 49, 37))
+```

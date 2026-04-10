@@ -137,7 +137,26 @@ let rfc850_date d : date * time =
   (date2, time)
 
 (* asctime datetime *)
-let asctime_date d = failwith "not implemented"
+let date3 d : int * int =
+  (* month, day *)
+  let m = month d in
+  space d;
+  let dd =
+    match d.buf.[d.pos] with
+    | ' ' ->
+        space d;
+        digits d 1
+    | _ -> digits d 2
+  in
+  (m, dd)
+
+let asctime_date d : date * time =
+  let m, dd = date3 d in
+  space d;
+  let time = time_of_day d in
+  space d;
+  let y = year d in
+  ((y, m, dd), time)
 
 let decode s : date * time =
   let d = { buf = s; pos = 0 } in
