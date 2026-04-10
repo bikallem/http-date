@@ -50,6 +50,29 @@ let digits d (n : int) : int =
   advance d n;
   int_of_string digit_chars
 
+let is_alpha_num = function
+  | '0' .. '9' | 'a' .. 'z' | 'A' .. 'Z' -> true
+  | _ -> false
+
+let string d : string =
+  let buf = Buffer.create 5 in
+  while is_alpha_num d.buf.[d.pos] && d.pos < String.length d.buf do
+    Buffer.add_char buf d.buf.[d.pos];
+    advance d 1
+  done;
+  Buffer.contents buf
+
+type day_token = Short | Long
+
+let day_name_token d : day_token =
+  let s = string d in
+  match s with
+  | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun" -> Short
+  | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday"
+  | "Sunday" ->
+      Long
+  | s -> invalid_arg @@ "Invalid dayname value '" ^ s ^ "'"
+
 let year d : int = digits d 4
 let day d = digits d 2
 
@@ -79,7 +102,6 @@ let gmt d : unit =
 
 (* -- IMF datetime -- *)
 let imf_date d : date * time =
-  day_name_short d;
   comma d;
   space d;
   let date1 = date1 d in
@@ -112,7 +134,6 @@ let date2 d : date =
   (y, m, dd)
 
 let rfc850_date d : date * time =
-  day_name_long d;
   comma d;
   space d;
   let date2 = date2 d in
@@ -124,5 +145,4 @@ let rfc850_date d : date * time =
 
 let decode s : date * time =
   let d = { buf = s; pos = 0 } in
-  let date, time = imf_date d in
-  (date, time)
+  match day_name_token d with Long -> rfc850_date d | Short -> imf_date d
