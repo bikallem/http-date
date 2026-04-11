@@ -67,10 +67,11 @@ val pp : ?encoding:encoding -> Format.formatter -> Ptime.t -> unit
     out to [fmt] instead of a string. *)
 
 module Date : sig
-  type date = int * int * int (* (year, month, day) *)
-  type time = int * int * int (* (hour, minute, seconds) *)
+  type t = private date * time
+  and date = private int * int * int (* (year, month, day) *)
+  and time = private int * int * int (* (hour, minute, seconds) *)
 
-  val decode : string -> date * time
+  val decode : string -> t
   (** [decode s] decodes HTTP date value in [s] to [(date, time)].
 
       @raise Invalid_argument

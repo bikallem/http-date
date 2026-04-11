@@ -1,6 +1,8 @@
 type decoder = { buf : string; mutable pos : int }
-type date = int * int * int (* year, month, day *)
-type time = int * int * int (* hour, minute, second *)
+
+type t = date * time
+and date = int * int * int (* year, month, day *)
+and time = int * int * int (* hour, minute, second *)
 
 let[@inline always] advance d n : unit = d.pos <- d.pos + n
 
