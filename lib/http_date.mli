@@ -67,19 +67,24 @@ val pp : ?encoding:encoding -> Format.formatter -> Ptime.t -> unit
     out to [fmt] instead of a string. *)
 
 module Date : sig
+  type dayname = [ `Mon | `Tue | `Wed | `Thu | `Fri | `Sat | `Sun ]
+  (** [dayname] is the day name of the week, e.g. "Mon", "Monday", "Tue" .etc *)
+
   type date = int * int * int
   (** (year, month, day) *)
 
   type time = int * int * int
   (** (hour, minute, seconds) *)
 
+  type datetime = dayname * date * time
+
   type t =
-    [ `IMF of date * time
+    [ `IMF of datetime
       (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"]
       *)
-    | `RFC850 of date * time
+    | `RFC850 of datetime
       (** RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete} *)
-    | `ASCTIME of date * time
+    | `ASCTIME of datetime
       (** asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete} *) ]
 
   val decode : string -> t

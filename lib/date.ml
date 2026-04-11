@@ -1,10 +1,10 @@
 type decoder = { buf : string; mutable pos : int }
 
-type t =
-  [ `IMF of date * time | `RFC850 of date * time | `ASCTIME of date * time ]
-
+type t = [ `IMF of datetime | `RFC850 of datetime | `ASCTIME of datetime ]
 and date = int * int * int (* year, month, day *)
 and time = int * int * int (* hour, minute, second *)
+and dayname = [ `Mon | `Tue | `Wed | `Thu | `Fri | `Sat | `Sun ]
+and datetime = dayname * date * time
 
 let[@inline always] advance d n : unit = d.pos <- d.pos + n
 
@@ -60,15 +60,25 @@ let string d : string =
   done;
   Buffer.contents buf
 
-type day_token = Short | Long
+type day_token = Short of dayname | Long of dayname
 
 let day_name_token d : day_token =
   let s = string d in
   match s with
-  | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun" -> Short
-  | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday"
-  | "Sunday" ->
-      Long
+  | "Mon" -> Short `Mon
+  | "Tue" -> Short `Tue
+  | "Wed" -> Short `Wed
+  | "Thu" -> Short `Thu
+  | "Fri" -> Short `Fri
+  | "Sat" -> Short `Sat
+  | "Sun" -> Short `Sun
+  | "Monday" -> Long `Mon
+  | "Tuesday" -> Long `Tue
+  | "Wednesday" -> Long `Wed
+  | "Thursday" -> Long `Thu
+  | "Friday" -> Long `Fri
+  | "Saturday" -> Long `Sat
+  | "Sunday" -> Long `Sun
   | s -> invalid_arg @@ "Invalid dayname value '" ^ s ^ "'"
 
 type punctuation_token = Comma | Space
@@ -165,9 +175,15 @@ let asctime_date d : date * time =
 let decode s : t =
   let d = { buf = s; pos = 0 } in
   match day_name_token d with
-  | Long -> `RFC850 (rfc850_date d)
-  | Short ->
+  | Long dayname ->
+      let date, time = rfc850_date d in
+      `RFC850 (dayname, date, time)
+  | Short dayname ->
       begin match punctuation_token d with
-      | Comma -> `IMF (imf_date d)
-      | Space -> `ASCTIME (asctime_date d)
+      | Comma ->
+          let d, t = imf_date d in
+          `IMF (dayname, d, t)
+      | Space ->
+          let d, t = asctime_date d in
+          `ASCTIME (dayname, d, t)
       end
