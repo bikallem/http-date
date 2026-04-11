@@ -2,8 +2,6 @@
 
 (name http-date)
 
-(using menhir 2.0)
-
 (using mdx 0.4)
 
 (generate_opam_files true)
@@ -23,12 +21,8 @@
  (description "RFC 9110 compliant HTTP datetime decoder and encoder")
  (depends
   (ocaml
-   (>= 4.08.0))
+   (>= 4.11.0))
   dune
-  (ptime
-   (>= 1.1.0))
-  (menhir
-   (>= 20220210))
   (mdx
    (and
     (>= 2.1.0)
