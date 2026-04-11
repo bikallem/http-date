@@ -34,10 +34,10 @@
           # the rest of ocamlPackages (ocaml-lsp, etc.) keeps its matching
           # dune monorepo libraries.
           dune = ocamlPackages.dune_3.overrideAttrs (_: rec {
-            version = "3.22.1";
+            version = "3.22.2";
             src = pkgs.fetchurl {
               url = "https://github.com/ocaml/dune/releases/download/${version}/dune-${version}.tbz";
-              hash = "sha256-DAuYOWwy7EJohsLCKUAk/Wh6xRFNTdoK+dyKLlhNR/0=";
+              hash = "sha256-wsz4vGsXr6R8RQKXNXSWMDqnyGgOMpt52Yxo41AToRg=";
             };
           });
         in
