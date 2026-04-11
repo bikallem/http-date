@@ -67,9 +67,20 @@ val pp : ?encoding:encoding -> Format.formatter -> Ptime.t -> unit
     out to [fmt] instead of a string. *)
 
 module Date : sig
-  type t = private date * time
-  and date = private int * int * int (* (year, month, day) *)
-  and time = private int * int * int (* (hour, minute, seconds) *)
+  type date = int * int * int
+  (** (year, month, day) *)
+
+  type time = int * int * int
+  (** (hour, minute, seconds) *)
+
+  type t =
+    [ `IMF of date * time
+      (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"]
+      *)
+    | `RFC850 of date * time
+      (** RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete} *)
+    | `ASCTIME of date * time
+      (** asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete} *) ]
 
   val decode : string -> t
   (** [decode s] decodes HTTP date value in [s] to [(date, time)].

@@ -1,6 +1,8 @@
 type decoder = { buf : string; mutable pos : int }
 
-type t = date * time
+type t =
+  [ `IMF of date * time | `RFC850 of date * time | `ASCTIME of date * time ]
+
 and date = int * int * int (* year, month, day *)
 and time = int * int * int (* hour, minute, second *)
 
@@ -160,12 +162,12 @@ let asctime_date d : date * time =
   let y = year d in
   ((y, m, dd), time)
 
-let decode s : date * time =
+let decode s : t =
   let d = { buf = s; pos = 0 } in
   match day_name_token d with
-  | Long -> rfc850_date d
+  | Long -> `RFC850 (rfc850_date d)
   | Short ->
       begin match punctuation_token d with
-      | Comma -> imf_date d
-      | Space -> asctime_date d
+      | Comma -> `IMF (imf_date d)
+      | Space -> `ASCTIME (asctime_date d)
       end
