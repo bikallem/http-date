@@ -1,2 +1,2 @@
 (mdx
- (libraries http-date ptime))
+ (libraries http-date))
