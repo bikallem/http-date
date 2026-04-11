@@ -20,85 +20,36 @@
       {{:https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.7}
        {e Date/Time Formats}} *)
 
-(** Encoding format specification for {!val:encode}.
+type dayname = [ `Mon | `Tue | `Wed | `Thu | `Fri | `Sat | `Sun ]
+(** [dayname] is the day name of the week, e.g. "Mon", "Monday", "Tue" .etc *)
 
-    {e Note:}
+type date = int * int * int
+(** (year, month, day) *)
 
-    {!constructor:RFC850} and {!constructor:ASCTIME} are both considered
-    obsolete. It is not advised for usage in new applications. They are both
-    included here for compliance of RFC 9110 and for backwards compatibility.
-    {!constructor:IMF} is the recommended format for usage. *)
-type encoding =
-  | IMF
-      (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"]
-      *)
-  | RFC850
-      (** RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete} *)
-  | ASCTIME  (** asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete} *)
+type time = int * int * int
+(** (hour, minute, seconds) *)
 
-val decode : ?century:int -> string -> Ptime.t
-(** [decode s] is [ptime] if [s] contains a valid textual representation of
-    formats defined in {!type:encoding}.
+type datetime = dayname * date * time
 
-    [century] An integer value representing century component of a year. This is
-    used to decode the correct year component of [ptime], if [s] contains
-    {e RFC 850} encoded date value, e.g. year [96] is decoded as [1996] if
-    [century = 19]. If [century] is not given, then the decoded year component
-    is used as is, i.e. [96].
+type t =
+  [ `IMF of datetime
+    (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"] *)
+  | `RFC850 of datetime
+    (** RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete} *)
+  | `ASCTIME of datetime
+    (** asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete} *) ]
 
-    {e decoding string in IMF fix date format:}
+val decode : string -> t
+(** [decode s] decodes HTTP date value in [s] to [(date, time)].
 
-    {[
-    Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT"
-    ]}
     @raise Invalid_argument
-      if [s] contains date format not supported by {!type:encoding}. *)
+      if [s] doesn't contain valid date in the format of IMF, RFC850 or ASCTIME.
+*)
 
-(** {1:encode Encode HTTP timestamps} *)
-
-val encode : ?encoding:encoding -> Ptime.t -> string
-(** [encode ?encoding ptime] encodes [ptime] into a given [encoding] textual
-    representation. The default value of [encoding] is {!constructor:IMF}. *)
+val encode : t -> string
+(** [encode t] is [t] in its string representation format. *)
 
 (** {1 Pretty Printing timestamps} *)
 
-val pp : ?encoding:encoding -> Format.formatter -> Ptime.t -> unit
-(** [pp ?encoding fmt ptime] is like [encode ?encoding ptime] except it prints
-    out to [fmt] instead of a string. *)
-
-module Date : sig
-  type dayname = [ `Mon | `Tue | `Wed | `Thu | `Fri | `Sat | `Sun ]
-  (** [dayname] is the day name of the week, e.g. "Mon", "Monday", "Tue" .etc *)
-
-  type date = int * int * int
-  (** (year, month, day) *)
-
-  type time = int * int * int
-  (** (hour, minute, seconds) *)
-
-  type datetime = dayname * date * time
-
-  type t =
-    [ `IMF of datetime
-      (** Internet Message Format fixdate, eg ["Sun, 06 Nov 1994 08:49:37 GMT"]
-      *)
-    | `RFC850 of datetime
-      (** RFC 850 date, eg ["Sunday, 06-Nov-94 08:49:37 GMT"] {e Obsolete} *)
-    | `ASCTIME of datetime
-      (** asctime date, eg ["Sun Nov  6 08:49:37 1994"] {e Obsolete} *) ]
-
-  val decode : string -> t
-  (** [decode s] decodes HTTP date value in [s] to [(date, time)].
-
-      @raise Invalid_argument
-        if [s] doesn't contain valid date in the format of IMF, RFC850 or
-        ASCTIME. *)
-
-  val encode : t -> string
-  (** [encode t] is [t] in its string representation format. *)
-
-  (** {1 Pretty Printing timestamps} *)
-
-  val pp : Format.formatter -> t -> unit
-  (** [pp fmt t] pretty prints [t] into a HTTP date time string format. *)
-end
+val pp : Format.formatter -> t -> unit
+(** [pp fmt t] pretty prints [t] into a HTTP date time string format. *)

@@ -1,117 +1,56 @@
-## Http_date decode/encode tests
+# Http_Http_date
 
-## Setup
+## IMF Http_date decoding
 
 ```ocaml
-# let std = Format.std_formatter ;;
-val std : Format.formatter = <abstr>
+# let imf_fixHttp_date = Http_date.decode "Sun, 06 Nov 1994 08:49:37 GMT" ;;
+val imf_fixHttp_date : Http_date.t = `IMF (`Sun, (1994, 11, 6), (8, 49, 37))
 ```
 
-### IMF fixdate
-
-Decode IMF (Internet Message Format) fixdate.
-
-
 ```ocaml
-# let imf_fixdate = "Sun, 06 Nov 1994 08:49:37 GMT" ;;
-val imf_fixdate : string = "Sun, 06 Nov 1994 08:49:37 GMT"
-
-# let d = Http_date.decode imf_fixdate ;;
-val d : Ptime.t = <abstr>
-```
-
-Encode IMF fixdate value.
-
-```ocaml
-# let s = Http_date.(encode ~encoding:IMF d) ;;
-val s : string = "Sun, 06 Nov 1994 08:49:37 GMT"
-
-# String.equal imf_fixdate s ;;
-- : bool = true
-```
-
-Pretty-print IMF fixdate.
-
-```ocaml
-# Http_date.pp std d ;;
+# Http_date.pp Format.std_formatter imf_fixHttp_date; Format.print_flush ();;
 Sun, 06 Nov 1994 08:49:37 GMT
 - : unit = ()
 ```
 
-### RFC850 date
-
-Decode RFC-850 specified date format.
-
 ```ocaml
-# let rfc850_date = "Sunday, 06-Nov-94 08:49:37 GMT" ;;
-val rfc850_date : string = "Sunday, 06-Nov-94 08:49:37 GMT"
-
-# let d = Http_date.decode ~century:19 rfc850_date ;;
-val d : Ptime.t = <abstr>
-
-# Ptime.to_date_time d ;;
-- : Ptime.date * Ptime.time = ((1994, 11, 6), ((8, 49, 37), 0))
+# Http_date.encode imf_fixHttp_date;;
+- : string = "Sun, 06 Nov 1994 08:49:37 GMT"
 ```
 
-Encode RFC850 date.
+## RFC850 Http_date decoding
 
 ```ocaml
-# let s = Http_date.(encode ~encoding:RFC850 d) ;;
-val s : string = "Sunday, 06-Nov-94 08:49:37 GMT"
-
-# String.equal rfc850_date s ;;
-- : bool = true
+# let rfc850_Http_date = Http_date.decode "Sunday, 06-Nov-94 08:49:37 GMT" ;;
+val rfc850_Http_date : Http_date.t = `RFC850 (`Sun, (94, 11, 6), (8, 49, 37))
 ```
 
-Pretty-print RFC850 date.
-
 ```ocaml
-# Http_date.(pp ~encoding:RFC850 std d) ;;
+# Http_date.pp Format.std_formatter rfc850_Http_date; Format.print_flush ();;
 Sunday, 06-Nov-94 08:49:37 GMT
 - : unit = ()
 ```
 
-### ASCTIME date
-
-Decode ASCTIME specified date format.
-
 ```ocaml
-# let asctime_date = "Sun Nov  6 08:49:37 1994" ;;
-val asctime_date : string = "Sun Nov  6 08:49:37 1994"
-
-# let d = Http_date.decode asctime_date ;;
-val d : Ptime.t = <abstr>
+# Http_date.encode rfc850_Http_date;;
+- : string = "Sunday, 06-Nov-94 08:49:37 GMT"
 ```
 
-Encode ASCTIME date.
+## ASCTIME Http_date
 
 ```ocaml
-# let s = Http_date.(encode ~encoding:ASCTIME d) ;;
-val s : string = "Sun Nov  6 08:49:37 1994"
-
-# String.equal asctime_date s ;;
-- : bool = true
+# let asctime_Http_date = Http_date.decode "Sun Nov  6 08:49:37 1994" ;;
+val asctime_Http_date : Http_date.t =
+  `ASCTIME (`Sun, (1994, 11, 6), (8, 49, 37))
 ```
 
-Pretty-print ASCTIME date.
-
 ```ocaml
-# Http_date.(pp ~encoding:ASCTIME std d) ;;
+# Http_date.pp Format.std_formatter asctime_Http_date; Format.print_flush ();;
 Sun Nov  6 08:49:37 1994
 - : unit = ()
 ```
 
-### Invalid datetime validation errors 
-
 ```ocaml
-# Http_date.decode "Sun, 70 Nov 1994 08:49:37 GMT" ;;
-Exception:
-Invalid_argument "date - (y,m,d) - value '(1994, 11, 70)' is invalid".
-
-# Http_date.decode "zzz, 6 Nov 1994 08:49:37 GMT" ;;
-Exception: Invalid_argument "Unrecognized character 'z' at position 1".
-
-# Http_date.decode "Sun, 07 Nov 1994 08:67:37 GMT" ;;
-Exception:
-Invalid_argument "time - (h,m,s) - value '(8, 67, 37)' is invalid".
+# Http_date.encode asctime_Http_date;;
+- : string = "Sun Nov  6 08:49:37 1994"
 ```
