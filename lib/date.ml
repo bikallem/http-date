@@ -60,9 +60,10 @@ let string d : string =
   done;
   Buffer.contents buf
 
-type day_token = Short of dayname | Long of dayname
+type dayname_tok = Short of dayname | Long of dayname
+(* dayname token *)
 
-let day_name_token d : day_token =
+let dayname_tok d : dayname_tok =
   let s = string d in
   match s with
   | "Mon" -> Short `Mon
@@ -174,7 +175,7 @@ let asctime_date d : date * time =
 
 let decode s : t =
   let d = { buf = s; pos = 0 } in
-  match day_name_token d with
+  match dayname_tok d with
   | Long dayname ->
       let date, time = rfc850_date d in
       `RFC850 (dayname, date, time)
@@ -187,3 +188,53 @@ let decode s : t =
           let d, t = asctime_date d in
           `ASCTIME (dayname, d, t)
       end
+
+let pp fmt t : unit =
+  let dayname_long = function
+    | `Mon -> "Monday"
+    | `Tue -> "Tuesday"
+    | `Wed -> "Wednesday"
+    | `Thu -> "Thursday"
+    | `Fri -> "Friday"
+    | `Sat -> "Saturday"
+    | `Sun -> "Sunday"
+  in
+  let dayname_short = function
+    | `Mon -> "Mon"
+    | `Tue -> "Tue"
+    | `Wed -> "Wed"
+    | `Thu -> "Thu"
+    | `Fri -> "Fri"
+    | `Sat -> "Sat"
+    | `Sun -> "Sun"
+  in
+  let month_string mm =
+    match mm with
+    | 1 -> "Jan"
+    | 2 -> "Feb"
+    | 3 -> "Mar"
+    | 4 -> "Apr"
+    | 5 -> "May"
+    | 6 -> "Jun"
+    | 7 -> "Jul"
+    | 8 -> "Aug"
+    | 9 -> "Sep"
+    | 10 -> "Oct"
+    | 11 -> "Nov"
+    | 12 -> "Dec"
+    | _ -> assert false
+  in
+  match t with
+  | `IMF (dayname, (y, m, d), (hh, mm, ss)) ->
+      Format.fprintf fmt "%s, %02d %s %04d %02d:%02d:%02d GMT"
+        (dayname_short dayname) d (month_string m) y hh mm ss
+  | `RFC850 (dayname, (y, m, d), (hh, mm, ss)) ->
+      Format.fprintf fmt "%s, %02d-%s-%02i %02d:%02d:%02d GMT"
+        (dayname_long dayname) d (month_string m) y hh mm ss
+  | `ASCTIME (dayname, (y, m, d), (hh, mm, ss)) ->
+      Format.fprintf fmt "%s %s %2d %02d:%02d:%02d %04d" (dayname_short dayname)
+        (month_string m) d hh mm ss y
+
+let encode t : string =
+  pp Format.str_formatter t;
+  Format.flush_str_formatter ()

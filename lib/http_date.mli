@@ -93,4 +93,12 @@ module Date : sig
       @raise Invalid_argument
         if [s] doesn't contain valid date in the format of IMF, RFC850 or
         ASCTIME. *)
+
+  val encode : t -> string
+  (** [encode t] is [t] in its string representation format. *)
+
+  (** {1 Pretty Printing timestamps} *)
+
+  val pp : Format.formatter -> t -> unit
+  (** [pp fmt t] pretty prints [t] into a HTTP date time string format. *)
 end
