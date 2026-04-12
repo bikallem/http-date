@@ -60,8 +60,18 @@
               }
             );
 
+          # dev ocaml with framePointerSupport
+          ocamlDev =
+            (pkgs.ocaml-ng.ocamlPackages_5_4.ocaml.override {
+              framePointerSupport = true;
+              flambdaSupport = true;
+            }).overrideAttrs
+              (_: {
+                doCheck = false;
+              });
+
           # Stock 5.4.1 scope - hits the binary cache.
-          ocamlPackages = mkScope pkgs.ocaml-ng.ocamlPackages_5_4.ocaml;
+          ocamlPackages = mkScope ocamlDev;
 
           # 5.4.1 + flambda + AFL instrumentation. Different store path than the
           # stock compiler, so the whole scope is rebuild locally on first use.
