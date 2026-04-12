@@ -6,6 +6,8 @@
 
 (generate_opam_files true)
 
+(implicit_transitive_deps false)
+
 (source
  (github bikallem/http-date))
 
@@ -23,6 +25,7 @@
   (ocaml
    (>= 4.11.0))
   dune
+  (alcobar :with-test)
   (mdx
    (and
     (>= 2.1.0)

@@ -1,0 +1,13 @@
+(lang dune 3.22)
+
+(context default)
+
+(context
+ (default
+  (name afl)
+  (profile afl)))
+
+(env
+ (afl
+  (ocamlopt_flags
+   (:standard -afl-instrument))))

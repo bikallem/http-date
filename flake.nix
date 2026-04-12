@@ -109,6 +109,7 @@
             scope.ocaml-lsp
             scope.ocamlformat
             scope.utop
+            scope.alcobar
           ];
 
         in
@@ -130,7 +131,6 @@
           # export NIX_DEVSHELL=fuzz && direnv reload
           fuzz = pkgs.mkShell {
             packages = commonPackages ocamlPackagesFuzz duneFuzz ++ [
-              ocamlPackagesFuzz.alcobar
               pkgs.aflplusplus
             ];
           };
