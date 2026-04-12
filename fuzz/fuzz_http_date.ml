@@ -17,7 +17,6 @@ let dayname : Http_date.dayname gen =
       const `Sun;
     ]
 
-(* month values are 1-12 inclusive. *)
 let month : int gen = range ~min:1 12
 
 (* `day` capped at 28: the parser doesn't validate day-of-month vs month, but
@@ -99,7 +98,8 @@ let test_corpus () =
   in
   List.iter
     (fun (input, expected) ->
-      check_eq ~pp:Http_date.pp expected (Http_date.decode input))
+      check_eq ~pp:Http_date.pp expected (Http_date.decode input);
+      round_trip expected)
     cases
 
 let test_asctime_day_width () =
