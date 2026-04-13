@@ -4,7 +4,7 @@ open Alcobar.Syntax
 (* -- Generators for valid Http_date.t values -- *)
 
 (* `dayname` is independent of `(y,m,d)`: the codec preserves whatever weekday
-  the input carries without cross-checking. Round-trip still holds. *)
+   the input carries without cross-checking. Round-trip still holds. *)
 let dayname : Http_date.dayname gen =
   choose
     [
@@ -19,8 +19,8 @@ let dayname : Http_date.dayname gen =
 
 let month : int gen = range ~min:1 12
 
-(* `day` capped at 28: the parser doesn't validate day-of-month vs month, but
-  28 is safe for all months so round-trips never depend on calendar logic. *)
+(* `day` capped at 28: the parser doesn't validate day-of-month vs month, but 28
+   is safe for all months so round-trips never depend on calendar logic. *)
 let day : int gen = range ~min:1 28
 let hour : int gen = range 24
 let minute : int gen = range 60
@@ -34,9 +34,9 @@ let date4 : Http_date.date gen =
   let+ y = range 10_000 and+ m = month and+ d = day in
   (y, m, d)
 
-(* RFC 850 uses `date2` (0–99): encoder emits `%02i`, parser reads exactly
-  2 digits ([lib/http_date.ml:147](lib/http_date.ml#L147)). Anything >= 100
-  would break the round-trip. *)
+(* RFC 850 uses `date2` (0–99): encoder emits `%02i`, parser reads exactly 2
+   digits ([lib/http_date.ml:147](lib/http_date.ml#L147)). Anything >= 100 would
+   break the round-trip. *)
 let date2 : Http_date.date gen =
   let+ y = range 100 and+ m = month and+ d = day in
   (y, m, d)
@@ -50,15 +50,15 @@ let rfc850_t : Http_date.t gen =
 let asctime_t : Http_date.t gen =
   map [ dayname; date4; time ] (fun dn d t -> `ASCTIME (dn, d, t))
 
-(* Property 1: decode must either return a value or raise Invalid_argument. 
-   Any other exception is a bug per http_date.mli. *)
+(* Property 1: decode must either return a value or raise Invalid_argument. Any
+   other exception is a bug per http_date.mli. *)
 let test_decode_no_crash input : unit =
   match Http_date.decode input with
   | _ -> ()
   | exception Invalid_argument _ -> ()
 
-(* Property 2: if decode succeeds, re-encoding and re-decoding must yield 
-   the same value. Invalid inputs are discarded via bad_test. *)
+(* Property 2: if decode succeeds, re-encoding and re-decoding must yield the
+   same value. Invalid inputs are discarded via bad_test. *)
 let test_decode_encode_stable input =
   match Http_date.decode input with
   | exception Invalid_argument _ -> bad_test ()

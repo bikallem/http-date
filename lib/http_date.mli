@@ -1,7 +1,7 @@
 (*---------------------------------------------------------------------------
-   Copyright (c) 2026 Bikal Gurung. All rights reserved.
-   Distributed under the MPL-2.0 license.
-   See (https://www.mozilla.org/media/MPL/2.0/index.815ca599c9df.txt).
+  Copyright (c) 2026 Bikal Gurung. All rights reserved. Distributed under the
+  MPL-2.0 license. See
+  (https://www.mozilla.org/media/MPL/2.0/index.815ca599c9df.txt).
   ---------------------------------------------------------------------------*)
 
 (** HTTP timestamp decoders and encoders complaint to RFC 9110 (HTTP Semantics).
