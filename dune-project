@@ -1,8 +1,6 @@
-(lang dune 3.22)
+(lang dune 3.24)
 
 (name http-date)
-
-(using mdx 0.4)
 
 (generate_opam_files true)
 
@@ -25,8 +23,5 @@
   (ocaml
    (>= 4.11.0))
   dune
-  (alcobar :with-test)
-  (mdx
-   (and
-    (>= 2.1.0)
-    :with-test))))
+  (windtrap :with-test)
+  (ppx_windtrap :with-test)))

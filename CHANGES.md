@@ -1,3 +1,13 @@
+## Unreleased
+
+### Changed
+
+- Tests migrated from mdx and alcobar to windtrap: `let%expect_test` for the
+  documented examples, `prop` for the properties, and `make mutate` for
+  mutation testing. AFL fuzzing and the `mdx`/`alcobar` test dependencies are
+  gone.
+- Require dune 3.24 to build.
+
 ## v0.2 2026-04-13
 
 ### Breaking changes

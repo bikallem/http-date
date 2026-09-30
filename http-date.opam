@@ -9,9 +9,9 @@ homepage: "https://github.com/bikallem/http-date"
 bug-reports: "https://github.com/bikallem/http-date/issues"
 depends: [
   "ocaml" {>= "4.11.0"}
-  "dune" {>= "3.22"}
-  "alcobar" {with-test}
-  "mdx" {>= "2.1.0" & with-test}
+  "dune" {>= "3.24"}
+  "windtrap" {with-test}
+  "ppx_windtrap" {with-test}
   "odoc" {with-doc}
 ]
 build: [

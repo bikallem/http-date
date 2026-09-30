@@ -1,3 +1,5 @@
 (library
  (public_name http-date)
- (name http_date))
+ (name http_date)
+ (instrumentation
+  (backend ppx_windtrap.mutate)))

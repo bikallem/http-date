@@ -1,2 +1,12 @@
-(mdx
- (libraries http-date))
+(library
+ (name http_date_expect)
+ (modules expect_http_date)
+ (libraries http-date)
+ (inline_tests)
+ (preprocess
+  (pps ppx_windtrap)))
+
+(test
+ (name test_http_date)
+ (modules test_http_date)
+ (libraries http-date windtrap))
