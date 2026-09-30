@@ -59,7 +59,11 @@ let is_alpha_num = function
 
 let string d : string =
   let buf = Buffer.create 5 in
-  while is_alpha_num d.buf.[d.pos] && d.pos < String.length d.buf do
+  while
+    (d.pos < String.length d.buf)
+    [@mutate off "<= raises the Invalid_argument decode raises anyway"]
+    && is_alpha_num d.buf.[d.pos]
+  do
     Buffer.add_char buf d.buf.[d.pos];
     advance d 1
   done;
