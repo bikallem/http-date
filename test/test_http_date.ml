@@ -116,6 +116,9 @@ let malformed =
     "Sun, 06 Nov 1994 08:49:37 PST";
     "Sun, 6 Nov 1994 08:49:37 GMT";
     "Sunday, 06-Nov-1994 08:49:37 GMT";
+    "Sun, 06 Nov 1994 08:49:37 GMTx";
+    "Sun Nov  6 08:49:37 1994 trailing";
+    "Sunday, 06-Nov-94 08:49:37 GMT ";
   ]
 
 let examples =

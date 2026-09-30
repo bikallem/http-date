@@ -122,13 +122,7 @@ let time_of_day d : time =
   let second = digits d 2 in
   (hour, minute, second)
 
-let gmt d : unit =
-  let txt = [| 'G'; 'M'; 'T' |] in
-  for i = 0 to 2 do
-    let c = d.buf.[d.pos + i] in
-    if c != txt.(i) then
-      Printf.sprintf "expected '%C' but got '%C'" txt.(i) c |> invalid_arg
-  done
+let gmt d : unit = String.iter (expect d) "GMT"
 
 (* -- IMF datetime -- *)
 let imf_date d : date * time =
@@ -184,19 +178,24 @@ let asctime_date d : date * time =
 
 let decode s : t =
   let d = { buf = s; pos = 0 } in
-  match dayname_tok d with
-  | Long dayname ->
-      let date, time = rfc850_date d in
-      `RFC850 (dayname, date, time)
-  | Short dayname ->
-      begin match punctuation_token d with
-      | Comma ->
-          let d, t = imf_date d in
-          `IMF (dayname, d, t)
-      | Space ->
-          let d, t = asctime_date d in
-          `ASCTIME (dayname, d, t)
-      end
+  let t =
+    match dayname_tok d with
+    | Long dayname ->
+        let date, time = rfc850_date d in
+        `RFC850 (dayname, date, time)
+    | Short dayname ->
+        begin match punctuation_token d with
+        | Comma ->
+            let d, t = imf_date d in
+            `IMF (dayname, d, t)
+        | Space ->
+            let d, t = asctime_date d in
+            `ASCTIME (dayname, d, t)
+        end
+  in
+  if d.pos <> String.length s then
+    Printf.sprintf "trailing data at offset %d" d.pos |> invalid_arg;
+  t
 
 let pp fmt t : unit =
   let dayname_long = function
